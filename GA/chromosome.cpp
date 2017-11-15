@@ -32,7 +32,7 @@ chromosome::~chromosome()
 {
 }
 
-string chromosome::encode(Vec3b c) {
+string encode(Vec3b c) {
 	int colorb = c[0], colorg = c[1], colorr = c[2];
 	string geneb = convertDecimaltoBinary(colorb);
 	string geneg = convertDecimaltoBinary(colorg);
@@ -41,16 +41,16 @@ string chromosome::encode(Vec3b c) {
 	return g;
 }
 
-cv::Vec3b chromosome::decode(string g) {
+cv::Vec3b decode(string g) {
 	int colorb = 0, colorg = 0, colorr = 0;
 	for (int i = 0; i < 8; i++) {
 		colorb += (g[i] -'0') * pow(2, i);
 	}
 	for (int i = 8; i < 16; i++) {
-		colorg += (g[i] - '0') * pow(2, i-8);
+		colorg += (g[i] - '0') * pow(2, 8-(i-8));
 	}
 	for (int i = 16; i < 24; i++) {
-		colorr += (g[i] - '0') * pow(2, i-16);
+		colorr += (g[i] - '0') * pow(2, 8-(i-16));
 	}
 	Vec3b c;
 	c[0] = colorb;
@@ -63,14 +63,17 @@ double chromosome::getFitness() {
 	return fitness;
 }
 
-void chromosome::calculateFitness(cv::Mat * goal) {
-	int fit = 0;
-	Vec3b goalColor = goal->at<Vec3b>(position);
-	string goalGene = encode(goalColor);
+//void chromosome::calculateFitness(cv::Mat * goal) {
+void chromosome::calculateFitness() {
+	double fit = 0;
+	//Vec3b goalColor = goal->at<Vec3b>(position);
+	Vec3b goalColor = Vec3b(255, 255, 255);
+	/*string goalGene = encode(goalColor);
 	for (int i = 0; i < goalGene.length(); i++) {
 		if (gene[i] == goalGene[i]) fit++;
-	}
-	fitness = (double)fit;
+	}*/
+	fit = (double)color[0] / (double)goalColor[0] + (double)color[1] / (double)goalColor[1] + (double)color[2] / (double)goalColor[2];
+	fitness = fit;
 }
 
 cv::Point chromosome::getPosition() {
@@ -95,11 +98,12 @@ void crossover(chromosome * a, chromosome * b) {
 
 	a->gene.replace(begin, end - begin + 1, bSegment);
 	b->gene.replace(begin, end - begin + 1, aSegment);
+
 }
 
 void mutation(chromosome * a) {
 	int mutationP = rand() % 24;
-	if (a->gene[mutationP] == 0) a->gene[mutationP] = 1;
-	else a->gene[mutationP] = 0;
+	if (a->gene[mutationP] == 0) a->gene[mutationP] = 1+'0';
+	else a->gene[mutationP] = 0 + '0';
 }
 
