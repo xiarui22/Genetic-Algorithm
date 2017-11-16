@@ -1,5 +1,7 @@
 #include "chromosome.h"
 //#include <algorithm>
+#include <stdio.h>
+#include <time.h>
 
 using namespace cv;
 
@@ -27,6 +29,12 @@ chromosome::chromosome(int b, int g, int r, int x, int y)
 	gene = encode(color);
 }
 
+chromosome::chromosome(chromosome* a) {
+	color = a->color;
+	position = a->position;
+	gene = a->gene;
+	fitness = a->fitness;
+}
 
 chromosome::~chromosome()
 {
@@ -44,13 +52,13 @@ string encode(Vec3b c) {
 cv::Vec3b decode(string g) {
 	int colorb = 0, colorg = 0, colorr = 0;
 	for (int i = 0; i < 8; i++) {
-		colorb += (g[i] -'0') * pow(2, i);
+		colorb += (g[i] -'0') * pow(2, 7-i);
 	}
 	for (int i = 8; i < 16; i++) {
-		colorg += (g[i] - '0') * pow(2, 8-(i-8));
+		colorg += (g[i] - '0') * pow(2, 7-(i-8));
 	}
 	for (int i = 16; i < 24; i++) {
-		colorr += (g[i] - '0') * pow(2, 8-(i-16));
+		colorr += (g[i] - '0') * pow(2, 7-(i-16));
 	}
 	Vec3b c;
 	c[0] = colorb;
@@ -72,36 +80,40 @@ void chromosome::calculateFitness() {
 	for (int i = 0; i < goalGene.length(); i++) {
 		if (gene[i] == goalGene[i]) fit++;
 	}*/
-	fit = (double)color[0] / (double)goalColor[0] + (double)color[1] / (double)goalColor[1] + (double)color[2] / (double)goalColor[2];
-	fitness = fit;
+	fit = abs((double)color[0] - (double)goalColor[0]) + abs((double)color[1] - (double)goalColor[1]) + abs((double)color[2] - (double)goalColor[2]);
+	fitness = -fit;
 }
 
 cv::Point chromosome::getPosition() {
 	return position;
 }
 
-
-
 void crossover(chromosome * a, chromosome * b) {
-	int begin = rand() % 24;
-	int end = rand() % 24;
-	if (begin > end) {
-		int temp = begin;
-		begin = end;
-		end = temp;
+	int i = 0;
+	srand(time(NULL));
+	while (i < 24) {
+		int begin = rand() % 8+i;
+		int end = rand() % 8+i;
+		if (begin > end) {
+			int temp = begin;
+			begin = end;
+			end = temp;
+		}
+		if (begin == end && begin != 0) begin -= 1;
+		if (begin == end && begin == 0) end += 1;
+
+		string aSegment = a->gene.substr(begin, end - begin + 1);
+		string bSegment = b->gene.substr(begin, end - begin + 1);
+
+		a->gene.replace(begin, end - begin + 1, bSegment);
+		b->gene.replace(begin, end - begin + 1, aSegment);
+		i += 8;
 	}
-	if (begin == end && begin != 0) begin -= 1;
-	if (begin == end && begin == 0) end += 1;
-
-	string aSegment = a->gene.substr(begin, end - begin + 1);
-	string bSegment = b->gene.substr(begin, end - begin + 1);
-
-	a->gene.replace(begin, end - begin + 1, bSegment);
-	b->gene.replace(begin, end - begin + 1, aSegment);
 
 }
 
 void mutation(chromosome * a) {
+	srand(time(NULL));
 	int mutationP = rand() % 24;
 	if (a->gene[mutationP] == 0) a->gene[mutationP] = 1+'0';
 	else a->gene[mutationP] = 0 + '0';

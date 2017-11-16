@@ -10,6 +10,7 @@ class chromosome
 
 	double fitness;
 public:
+	chromosome(chromosome*);
 	chromosome(int, int, int, int, int);
 	~chromosome();
 	

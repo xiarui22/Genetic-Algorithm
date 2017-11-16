@@ -1,6 +1,7 @@
-#include <stdio.h>
+
 #include <stdlib.h>
 #include <algorithm> 
+#include <stdio.h>
 #include <time.h>
 #include "chromosome.h"
 
@@ -14,8 +15,11 @@ using namespace std;
 #define PM 0.3  //probability to mutate
 
 
+
 Mat *img = new Mat();
 vector <chromosome *> currentGeneration;
+
+int populationNum = 0;
 
 struct by_fitness {
 	bool operator()(chromosome* &a, chromosome* &b) {
@@ -27,7 +31,8 @@ struct by_fitness {
 void init(Mat *goal)     
 {
 	img = new Mat(goal->size(), goal->type());
-srand(time(NULL));
+    srand(time(NULL));
+	populationNum = img->rows*img->cols;
 	for (int y = 0; y < img->rows; y++)
 	{
 		for (int x = 0; x < img->cols; x++)
@@ -64,11 +69,14 @@ void FitnessCalculation(Mat * goal)
 
 void Crossover() 
 {
-	//for (int i = 0; i < currentGeneration.size() * RC; i += 1) {
-	for (int i = 1; i < currentGeneration.size()/2; i += 1) {
+	for (int i = 0; i < (populationNum)/2; i += 1) {
 		int a = rand() % 10 + 1;
 		if (float(a / 10) < PC) {
-			crossover(currentGeneration[i], currentGeneration[i + 4]);
+			chromosome * child0 = new chromosome(currentGeneration[i]);
+	        chromosome * child1 = new chromosome(currentGeneration[i+ (populationNum) / 2]);
+			crossover(child0, child1);
+			currentGeneration.push_back(child0);
+			currentGeneration.push_back(child1);
 			cout << "crossover happens" << endl;
 		}
 	}
@@ -103,9 +111,9 @@ void survivorSelection() {
 		currentGeneration[i]->calculateFitness();
 	}
 	sort(currentGeneration.begin(), currentGeneration.end(), by_fitness());
-	int i = currentGeneration.size()-1;
-	currentGeneration[i] = currentGeneration[0];
-	//currentGeneration[i - 1] = currentGeneration[0];
+	for (int i = currentGeneration.size()-1; i >= populationNum; i--) {
+		currentGeneration.erase(currentGeneration.begin() + i);
+	}
 	cout << "survivorSelection" << endl;
 	for (int a = 0; a < currentGeneration.size(); a++) {
 		cout << currentGeneration[a]->getFitness() << " " << currentGeneration[a]->color << " "<<currentGeneration[a]->gene << endl;
