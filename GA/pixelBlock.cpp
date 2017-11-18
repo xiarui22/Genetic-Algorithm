@@ -63,7 +63,7 @@ void pixelBlock::init()
 			img->at<Vec3b>(x, y) = color;
 		}
 	}
-	//imshow("population", *img);
+	imshow("population", *img);
 	//waitKey(1000);
 }
 
@@ -93,7 +93,7 @@ void pixelBlock::FitnessCalculation() {
 		currentGeneration[i]->calculateFitness(goalColor);
 	}
 	sort(currentGeneration.begin(), currentGeneration.end(), by_fitness());
-	cout << "fitness" << endl;
+	//cout << "fitness" << endl;
 }
 
 void pixelBlock::Crossover() {
@@ -105,10 +105,10 @@ void pixelBlock::Crossover() {
 			crossover(child0, child1);
 			currentGeneration.push_back(child0);
 			currentGeneration.push_back(child1);
-			cout << "crossover happens" << endl;
+		//	cout << "crossover happens" << endl;
 		}
 	}
-	cout << "crossover" << endl;
+	//cout << "crossover" << endl;
 }
 
 void pixelBlock::Mutation() {
@@ -116,9 +116,9 @@ void pixelBlock::Mutation() {
 	int a = rand() % 10 + 1;
 	if (float(a / 10) < PM) {
 		mutation(currentGeneration[i]);
-		cout << "mutation happens" << i << endl;
+	//	cout << "mutation happens" << i << endl;
 	}
-	cout << "mutation" << endl;
+	//cout << "mutation" << endl;
 }
 
 void pixelBlock::survivorSelection() {
@@ -131,7 +131,7 @@ void pixelBlock::survivorSelection() {
 	for (int i = currentGeneration.size() - 1; i >= populationNum; i--) {
 		currentGeneration.erase(currentGeneration.begin() + i);
 	}
-	cout << "survivorSelection" << endl;
+	//cout << "survivorSelection" << endl;
 	color = currentGeneration[0]->color;
 	cout << color;
 }
@@ -144,6 +144,6 @@ void pixelBlock::showGeneration() {
 			img->at<Vec3b>(x, y) = color;
 		}
 	}
-	imshow("population", *img);
+	//imshow("population", *img);
 	//waitKey(1000);
 }
