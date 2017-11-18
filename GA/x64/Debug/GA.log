@@ -1,8 +1,6 @@
-﻿  chromosome.cpp
-z:\igmprofile\documents\760\hw2\ga\chromosome.cpp(55): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-z:\igmprofile\documents\760\hw2\ga\chromosome.cpp(58): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-z:\igmprofile\documents\760\hw2\ga\chromosome.cpp(61): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-z:\igmprofile\documents\760\hw2\ga\chromosome.cpp(93): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-z:\igmprofile\documents\760\hw2\ga\chromosome.cpp(116): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  GA.vcxproj -> Z:\IGMProfile\Documents\760\hw2\x64\Debug\GA.exe
-  GA.vcxproj -> Z:\IGMProfile\Documents\760\hw2\x64\Debug\GA.pdb (Full PDB)
+﻿  pixelBlock.cpp
+f:\760 ai\hw2\genetic algorithm\ga\pixelblock.cpp(51): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\760 ai\hw2\genetic algorithm\ga\pixelblock.cpp(87): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+f:\760 ai\hw2\genetic algorithm\ga\pixelblock.cpp(93): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  GA.vcxproj -> F:\760 ai\hw2\Genetic Algorithm\x64\Debug\GA.exe
+  GA.vcxproj -> F:\760 ai\hw2\Genetic Algorithm\x64\Debug\GA.pdb (Full PDB)

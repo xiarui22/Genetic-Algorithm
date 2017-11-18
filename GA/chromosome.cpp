@@ -71,11 +71,12 @@ double chromosome::getFitness() {
 	return fitness;
 }
 
-//void chromosome::calculateFitness(cv::Mat * goal) {
 void chromosome::calculateFitness() {
+//void chromosome::calculateFitness(cv::Vec3b c) {
 	double fit = 0;
 	//Vec3b goalColor = goal->at<Vec3b>(position);
-	Vec3b goalColor = Vec3b(255, 255, 255);
+	Vec3b goalColor = Vec3b(0, 0, 255);
+	//Vec3b goalColor = c;
 	/*string goalGene = encode(goalColor);
 	for (int i = 0; i < goalGene.length(); i++) {
 		if (gene[i] == goalGene[i]) fit++;

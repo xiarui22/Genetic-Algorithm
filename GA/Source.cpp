@@ -54,7 +54,7 @@ void init(Mat *goal)
 	waitKey(1000);
 }
 
-void FitnessCalculation(Mat * goal) 
+void FitnessCalculation() 
 {
 	int size = currentGeneration.size();
 	for (int i = 0; i < size; i++) {
@@ -62,9 +62,9 @@ void FitnessCalculation(Mat * goal)
 	}
 	sort(currentGeneration.begin() , currentGeneration.end(), by_fitness());
 	cout << "fitness" << endl;
-	for (int a = 0; a < currentGeneration.size(); a++) {
+	/*for (int a = 0; a < currentGeneration.size(); a++) {
 		cout << currentGeneration[a]->getFitness() <<" "<<currentGeneration[a]->color<< currentGeneration[a]->gene << endl;
-	}
+	}*/
 }
 
 void Crossover() 
@@ -81,9 +81,9 @@ void Crossover()
 		}
 	}
 	cout << "crossover" << endl;
-		for (int a = 0; a < currentGeneration.size(); a++) {
+	/*	for (int a = 0; a < currentGeneration.size(); a++) {
 			cout << currentGeneration[a]->getFitness() << " " << currentGeneration[a]->color << currentGeneration[a]->gene << endl;
-		}
+		}*/
 	
 }
 
@@ -99,9 +99,9 @@ void Mutation() {
 	//	numOfmutation++;
 	//}
 	cout << "mutation" << endl;
-	for (int a = 0; a < currentGeneration.size(); a++) {
+	/*for (int a = 0; a < currentGeneration.size(); a++) {
 		cout << currentGeneration[a]->getFitness() << " " << currentGeneration[a]->color <<" "<<currentGeneration[a]->gene<< endl;
-	}
+	}*/
 }
 
 void survivorSelection() {
@@ -115,32 +115,28 @@ void survivorSelection() {
 		currentGeneration.erase(currentGeneration.begin() + i);
 	}
 	cout << "survivorSelection" << endl;
-	for (int a = 0; a < currentGeneration.size(); a++) {
+	/*for (int a = 0; a < currentGeneration.size(); a++) {
 		cout << currentGeneration[a]->getFitness() << " " << currentGeneration[a]->color << " "<<currentGeneration[a]->gene << endl;
-	}
+	}*/
 }
 
+
 void ShowGeneration() {
+	//for (int i = 0; i < currentGeneration.size(); i++) {
+	//	//img->at<Vec3b>(currentGeneration[i]->getPosition()) = currentGeneration[i]->color;
+	//	Vec3b goalColor = Vec3b(102, 45, 145);
+	//	img->at<Vec3b>(currentGeneration[i]->getPosition()) = goalColor;
+	//	int a = 0;
+	//}
 	for (int y = 0; y < img->rows; y++)
 	{
 		for (int x = 0; x < img->cols; x++)
-		{
-			Vec3b color;
-			Point a = Point(x, y);
-			/*auto it = find_if(generation.begin(), generation.end(), [=](chromosome* f) {
-				return (f->position == a);
-			});
-			
-			color = (*it)->decode((*it)->gene);*/
-			//color = generation[0]->decode(generation[0]->gene);
-			//color = decode(currentGeneration[0]->gene);
-			color = currentGeneration[0]->color;
-			/*color[0] = 255;
-			color[1] = 255;
-			color[2] = 255;*/
-			img->at<Vec3b>(x, y) = color;
+		{               
+			img->at<Vec3b>(x, y) = currentGeneration[0]->color;
 		}
 	}
+
+
 	cout << "show" << endl;
 	for (int a = 0; a < currentGeneration.size(); a++) {
 		cout << currentGeneration[a]->getFitness() << " " << currentGeneration[a]->color << " " << currentGeneration[a]->gene << endl;
@@ -160,20 +156,12 @@ bool isTerminate(Mat *goal, Mat *img) {
 	return true;
 }
 
-int main()
-{
-	Mat *goal = new Mat();
-	*goal = imread("kingboos.jpg");
-	if (goal->empty())
-	{
-		cout << "error";
-		return -1;
-	}
-	imshow("King boo", *goal);
+void breed(Point leftTop, Mat * goal) {
 	init(goal);
 	int i = 0;
-	while (!isTerminate(goal, img)) {
-		FitnessCalculation(goal);
+	//while (!isTerminate(goal, img)) {
+	while (i<10) {
+		FitnessCalculation();
 		Crossover();
 		Mutation();
 		survivorSelection();
@@ -181,7 +169,35 @@ int main()
 		i++;
 		cout << i << endl;
 	}
-    waitKey();
+	waitKey(1000);
+}
+
+int main()
+{
+	Mat *goal = new Mat();
+
+	*goal = imread("kingboos.jpg");
+	if (goal->empty())
+	{
+		cout << "error";
+		return -1;
+	}
+	imshow("King boo", *goal);
+
+	Mat *partGoal[9]; 
+	
+
+	for (int y = 0; y < goal->rows; y+=3)
+	{
+		for (int x = 0; x < goal->cols; x+=3)
+		{
+			Rect rec = Rect(x, y, 3, 3);
+			partGoal[y * 3 + x] = new Mat(*goal, rec);
+			breed(Point(x, y), partGoal[y * 3 + x]);
+		}
+	}
+	
+	//waitKey();
 
 	return 0;
 

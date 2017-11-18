@@ -6,8 +6,6 @@
 using namespace std;
 class chromosome
 {
-	
-
 	double fitness;
 public:
 	chromosome(chromosome*);
@@ -15,8 +13,8 @@ public:
 	~chromosome();
 	
 	double getFitness();
-	//void calculateFitness(cv::Mat *);
 	void calculateFitness();
+	//void calculateFitness(cv::Vec3b);
 	cv::Point getPosition();
 	string gene;
 	cv::Point position;
