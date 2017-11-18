@@ -13,8 +13,7 @@ public:
 	~chromosome();
 	
 	double getFitness();
-	void calculateFitness();
-	//void calculateFitness(cv::Vec3b);
+	void calculateFitness(cv::Vec3b);
 	cv::Point getPosition();
 	string gene;
 	cv::Point position;
